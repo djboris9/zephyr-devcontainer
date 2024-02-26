@@ -1,3 +1,5 @@
+FROM mcr.microsoft.com/devcontainers/base:debian-12
+
 #
 # Ref: https://docs.zephyrproject.org/3.5.0/develop/getting_started/index.html
 #
@@ -9,15 +11,13 @@ RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
 	git cmake ninja-build gperf ccache dfu-util device-tree-compiler wget     \
 	python3-dev python3-pip python3-setuptools python3-tk python3-wheel       \
-	xz-utils file make gcc gcc-multilib g++-multilib libsdl2-dev libmagic1 && \
+	xz-utils file make gcc gcc-multilib g++-multilib libsdl2-dev libmagic1    \
+	python3-venv                                                           && \
 	apt-get clean
 
 #
-# Get Zephyr and install Python dependencies
+# Get and install Zephyr
 #
-
-# TODO: Integrate line with before
-RUN apt-get install -y python3-venv && apt-get clean
 
 USER vscode
 WORKDIR /home/vscode/
@@ -32,6 +32,7 @@ ENV ZEPHYR_BASE=/home/vscode/zephyrproject/
 RUN west update
 RUN west zephyr-export
 RUN pip install -r ~/zephyrproject/zephyr/scripts/requirements.txt
+
 # Real zephyr base
 ENV ZEPHYR_BASE=/home/vscode/zephyrproject/zephyr/
 
